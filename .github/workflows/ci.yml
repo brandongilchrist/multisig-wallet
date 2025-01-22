@@ -18,21 +18,21 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
         with:
-          version: nightly
+          version: 9.1.0
 
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.11.0
-          cache: "pnpm"
+          cache: 'pnpm'
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: 9.1.0
+          version: nightly
 
       - name: Install Dependencies
         run: pnpm install
@@ -70,16 +70,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.11.0
-          cache: "pnpm"
-
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9.1.0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: 'pnpm'
 
       - name: Install Dependencies
         run: pnpm install
@@ -96,24 +96,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.11.0
-          cache: "pnpm"
-
       - name: Install pnpm
         uses: pnpm/action-setup@v2
         with:
           version: 9.1.0
 
-      - name: Install Dependencies
-        run: pnpm install
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: 'pnpm'
 
       - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
+
+      - name: Install Dependencies
+        run: pnpm install
 
       - name: Install Security Tools
         run: |
