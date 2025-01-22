@@ -1,0 +1,10 @@
+profile.default =
+  build:
+    compiler_version = '0.8.20'
+    extra_output_files = ['metadata']
+    libs = ['contracts/src', 'lib']
+  fuzz_runs = 256
+  remappings = []
+
+[profile.default.env]
+# Additional environment variables can be declared if needed
