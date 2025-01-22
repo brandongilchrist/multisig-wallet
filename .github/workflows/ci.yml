@@ -2,39 +2,128 @@ name: CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
+
+env:
+  FOUNDRY_PROFILE: ci
 
 jobs:
-  build-and-test:
+  test:
+    name: Test Contracts
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Set up Node
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
         with:
-          node-version: 20
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: nightly
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: "pnpm"
 
       - name: Install pnpm
-        run: npm install -g pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.0
 
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Hardhat Compile
-        run: pnpm compile
-
-      - name: Hardhat Tests
-        run: pnpm test:hardhat
-
-      - name: Install Foundry
+      - name: Run Forge build
         run: |
-          curl -L https://foundry.paradigm.xyz | bash
-          $HOME/.foundry/bin/foundryup
+          forge --version
+          forge build --sizes
+        id: build
 
-      - name: Foundry Tests
-        run: pnpm test:foundry
+      - name: Run Forge tests
+        run: |
+          forge test -vvv
+        id: forge-test
+
+      - name: Run Hardhat compile
+        run: pnpm hardhat compile
+
+      - name: Run Hardhat tests
+        run: pnpm test:hardhat
+        env:
+          REPORT_GAS: true
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+
+      - name: Run Coverage Report
+        run: pnpm coverage
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: "pnpm"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.0
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Run Solhint
+        run: pnpm lint:sol
+
+      - name: Run Prettier
+        run: pnpm format
+
+  security:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.0
+          cache: "pnpm"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9.1.0
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Security Tools
+        run: |
+          pip3 install slither-analyzer
+          pip3 install mythril
+
+      - name: Run Slither
+        run: pnpm security:slither
+        continue-on-error: true
+
+      - name: Run Mythril
+        run: pnpm security:mythril
+        continue-on-error: true
