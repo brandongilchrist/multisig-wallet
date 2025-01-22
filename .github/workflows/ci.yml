@@ -35,7 +35,7 @@ jobs:
         run: |
           curl -L https://foundry.paradigm.xyz | bash
           source /home/runner/.bashrc
-          which foundryup || echo "foundryup not found"
+          export PATH=$PATH:/home/runner/.foundry/bin
           foundryup
 
       - name: Foundry Tests
