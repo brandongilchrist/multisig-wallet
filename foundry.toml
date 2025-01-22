@@ -1,10 +1,22 @@
-profile.default =
-  build:
-    compiler_version = '0.8.20'
-    extra_output_files = ['metadata']
-    libs = ['contracts/src', 'lib']
-  fuzz_runs = 256
-  remappings = []
+[profile.default]
+src = "contracts/src"
+test = "test/foundry"
+out = "out"
+libs = ["node_modules", "lib"]
+remappings = [
+    "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/",
+    "forge-std/=lib/forge-std/src/"
+]
+solc_version = "0.8.20"
+optimizer = true
+optimizer_runs = 200
 
 [profile.default.env]
 # Additional environment variables can be declared if needed
+
+[profile.default.fuzz]
+runs = 1000
+
+[profile.default.invariant]
+runs = 1000
+depth = 100

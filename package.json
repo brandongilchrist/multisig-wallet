@@ -5,26 +5,29 @@
   "scripts": {
     "compile": "hardhat compile",
     "test:hardhat": "hardhat test",
-    "test:foundry": "forge test --match-path test/foundry",
+    "test:foundry": "forge test",
     "test": "pnpm test:hardhat && pnpm test:foundry",
-    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "lint": "solhint contracts/**/*.sol",
     "format": "prettier --write .",
     "coverage": "echo 'Coverage to be configured later if needed'",
     "deploy:local": "echo 'Add local deploy script later'",
     "deploy:testnet": "echo 'Add testnet deploy script later'",
     "deploy:mainnet": "echo 'Add mainnet deploy script later'",
     "security:slither": "slither .",
-    "security:mythril": "myth analyze ./contracts/src/core --solc-json solc_input.json"
+    "security:mythril": "myth analyze ./contracts/src/core --solc-json solc_input.json",
+    "clean": "hardhat clean && forge clean"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
-    "@nomiclabs/hardhat-ethers": "^3.1.0",
-    "@nomiclabs/hardhat-etherscan": "^3.1.0",
-    "@nomiclabs/hardhat-waffle": "^2.0.3",
-    "ethers": "^6.5.0",
-    "hardhat": "^3.0.0",
-    "prettier": "^3.0.0",
-    "prettier-plugin-solidity": "^1.1.0",
-    "solhint": "^3.4.2"
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@nomicfoundation/hardhat-verify": "2.0.12",
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "@openzeppelin/contracts": "^5.0.1",
+    "@typechain/hardhat": "^9.1.0",
+    "ethers": "^6.13.5",
+    "hardhat": "^2.22.18",
+    "prettier": "^3.4.2",
+    "prettier-plugin-solidity": "^1.4.2",
+    "solhint": "^5.0.5"
   }
 }

@@ -123,4 +123,5 @@ slither-results.json
 # Ignore cursor-related files
 .cursorrules
 cursor.md
-roadmap.md
+roadmap.mdlib/
+out/
